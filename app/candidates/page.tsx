@@ -1,131 +1,171 @@
-"use client"
+"use client";
 
-import { useState } from 'react'
-import { Sidebar } from '@/components/layout/sidebar'
-import { Header } from '@/components/layout/header'
-import { CandidateCard } from '@/components/candidates/candidate-card'
-import { CandidateFilters } from '@/components/candidates/candidate-filters'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
-import { Users, Download } from 'lucide-react'
+import { useState } from "react";
+import { Sidebar } from "@/components/layout/sidebar";
+import { Header } from "@/components/layout/header";
+import { CandidateCard } from "@/components/candidates/candidate-card";
+import { CandidateFilters } from "@/components/candidates/candidate-filters";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Users, Download } from "lucide-react";
 
 const mockCandidates = [
   {
-    id: '1',
-    email: 'sarah.chen@email.com',
-    first_name: 'Sarah',
-    last_name: 'Chen',
-    expertise: ['Marine Engineering', 'Engine Room Operations', 'Safety Management'],
-    skills: ['Diesel Engines', 'Hydraulic Systems', 'Preventive Maintenance', 'Troubleshooting'],
-    languages: ['English', 'Mandarin', 'Spanish'],
-    location: 'Singapore',
-    relocation_preferences: ['Hong Kong', 'Dubai', 'Rotterdam'],
+    id: "1",
+    email: "sarah.chen@email.com",
+    first_name: "Sarah",
+    last_name: "Chen",
+    expertise: [
+      "Marine Engineering",
+      "Engine Room Operations",
+      "Safety Management",
+    ],
+    skills: [
+      "Diesel Engines",
+      "Hydraulic Systems",
+      "Preventive Maintenance",
+      "Troubleshooting",
+    ],
+    languages: ["English", "Mandarin", "Spanish"],
+    location: "Singapore",
+    relocation_preferences: ["Hong Kong", "Dubai", "Rotterdam"],
     years_experience: 8,
-    education: 'Marine Engineering Degree',
-    portfolio_url: 'https://portfolio.example.com',
-    references: ['Capt. John Smith', 'Chief Eng. Maria Garcia'],
-    created_at: '2024-01-10',
+    education: "Marine Engineering Degree",
+    portfolio_url: "https://portfolio.example.com",
+    references: ["Capt. John Smith", "Chief Eng. Maria Garcia"],
+    created_at: "2024-01-10",
   },
   {
-    id: '2',
-    email: 'marcus.rodriguez@email.com',
-    first_name: 'Marcus',
-    last_name: 'Rodriguez',
-    expertise: ['Navigation', 'Bridge Management', 'Cargo Operations'],
-    skills: ['ECDIS', 'Radar Operation', 'Weather Routing', 'Port Operations'],
-    languages: ['English', 'Spanish', 'Portuguese'],
-    location: 'Panama',
-    relocation_preferences: ['Global'],
+    id: "2",
+    email: "marcus.rodriguez@email.com",
+    first_name: "Marcus",
+    last_name: "Rodriguez",
+    expertise: ["Navigation", "Bridge Management", "Cargo Operations"],
+    skills: ["ECDIS", "Radar Operation", "Weather Routing", "Port Operations"],
+    languages: ["English", "Spanish", "Portuguese"],
+    location: "Panama",
+    relocation_preferences: ["Global"],
     years_experience: 12,
-    education: 'Nautical Science Degree',
-    references: ['Capt. Lisa Wong', 'Port Manager Carlos Silva'],
-    created_at: '2024-01-08',
+    education: "Nautical Science Degree",
+    references: ["Capt. Lisa Wong", "Port Manager Carlos Silva"],
+    created_at: "2024-01-08",
   },
   {
-    id: '3',
-    email: 'emma.thompson@email.com',
-    first_name: 'Emma',
-    last_name: 'Thompson',
-    expertise: ['Safety Compliance', 'Maritime Law', 'Environmental Protection'],
-    skills: ['ISM Code', 'MARPOL', 'Risk Assessment', 'Audit Management'],
-    languages: ['English', 'French', 'German'],
-    location: 'London',
-    relocation_preferences: ['Rotterdam', 'Hamburg', 'Antwerp'],
+    id: "3",
+    email: "emma.thompson@email.com",
+    first_name: "Emma",
+    last_name: "Thompson",
+    expertise: [
+      "Safety Compliance",
+      "Maritime Law",
+      "Environmental Protection",
+    ],
+    skills: ["ISM Code", "MARPOL", "Risk Assessment", "Audit Management"],
+    languages: ["English", "French", "German"],
+    location: "London",
+    relocation_preferences: ["Rotterdam", "Hamburg", "Antwerp"],
     years_experience: 6,
-    education: 'Maritime Law & Safety Management',
-    references: ['Safety Dir. James Wilson', 'Legal Counsel Anne Martin'],
-    created_at: '2024-01-05',
+    education: "Maritime Law & Safety Management",
+    references: ["Safety Dir. James Wilson", "Legal Counsel Anne Martin"],
+    created_at: "2024-01-05",
   },
-]
+];
+
+// Define the Filters interface for type safety
+interface Filters {
+  searchTerm: string;
+  expertise: string[];
+  locations: string[];
+  languages: string[];
+  experienceRange: string; // e.g., '0-2', '3-5', '6-10', '10+'
+}
+
+const defaultFilters: Filters = {
+  searchTerm: "",
+  expertise: [],
+  locations: [],
+  languages: [],
+  experienceRange: "",
+};
 
 export default function CandidatesPage() {
-  const [filters, setFilters] = useState({})
-  const [shortlistedCandidates, setShortlistedCandidates] = useState<string[]>([])
+  const [filters, setFilters] = useState<Filters>(defaultFilters);
+  const [shortlistedCandidates, setShortlistedCandidates] = useState<string[]>(
+    []
+  );
 
   const handleFiltersChange = (newFilters: any) => {
-    setFilters(newFilters)
-  }
+    setFilters(newFilters);
+  };
 
   const handleViewProfile = (candidateId: string) => {
-    console.log('Viewing profile for candidate:', candidateId)
+    console.log("Viewing profile for candidate:", candidateId);
     // Navigate to candidate profile page
-  }
+  };
 
   const handleShortlist = (candidateId: string) => {
-    setShortlistedCandidates(prev => 
+    setShortlistedCandidates((prev) =>
       prev.includes(candidateId)
-        ? prev.filter(id => id !== candidateId)
+        ? prev.filter((id) => id !== candidateId)
         : [...prev, candidateId]
-    )
-  }
+    );
+  };
 
   // Filter candidates based on current filters
-  const filteredCandidates = mockCandidates.filter(candidate => {
+  const filteredCandidates = mockCandidates.filter((candidate) => {
     if (filters.searchTerm) {
-      const searchLower = filters.searchTerm.toLowerCase()
-      const matchesSearch = 
+      const searchLower = filters.searchTerm.toLowerCase();
+      const matchesSearch =
         candidate.first_name.toLowerCase().includes(searchLower) ||
         candidate.last_name.toLowerCase().includes(searchLower) ||
-        candidate.expertise.some(exp => exp.toLowerCase().includes(searchLower)) ||
-        candidate.skills.some(skill => skill.toLowerCase().includes(searchLower))
-      
-      if (!matchesSearch) return false
+        candidate.expertise.some((exp) =>
+          exp.toLowerCase().includes(searchLower)
+        ) ||
+        candidate.skills.some((skill) =>
+          skill.toLowerCase().includes(searchLower)
+        );
+
+      if (!matchesSearch) return false;
     }
 
     if (filters.expertise?.length > 0) {
-      const hasMatchingExpertise = filters.expertise.some(exp => 
+      const hasMatchingExpertise = filters.expertise.some((exp) =>
         candidate.expertise.includes(exp)
-      )
-      if (!hasMatchingExpertise) return false
+      );
+      if (!hasMatchingExpertise) return false;
     }
 
     if (filters.locations?.length > 0) {
-      const hasMatchingLocation = filters.locations.some(loc => 
-        candidate.location.includes(loc) || 
-        candidate.relocation_preferences.includes(loc)
-      )
-      if (!hasMatchingLocation) return false
+      const hasMatchingLocation = filters.locations.some(
+        (loc) =>
+          candidate.location.includes(loc) ||
+          candidate.relocation_preferences.includes(loc)
+      );
+      if (!hasMatchingLocation) return false;
     }
 
     if (filters.languages?.length > 0) {
-      const hasMatchingLanguage = filters.languages.some(lang => 
+      const hasMatchingLanguage = filters.languages.some((lang) =>
         candidate.languages.includes(lang)
-      )
-      if (!hasMatchingLanguage) return false
+      );
+      if (!hasMatchingLanguage) return false;
     }
 
     if (filters.experienceRange) {
-      const [min, max] = filters.experienceRange.includes('+') 
+      const [min, max] = filters.experienceRange.includes("+")
         ? [parseInt(filters.experienceRange), Infinity]
-        : filters.experienceRange.split('-').map(n => parseInt(n))
-      
-      if (candidate.years_experience < min || candidate.years_experience > max) {
-        return false
+        : filters.experienceRange.split("-").map((n) => parseInt(n));
+
+      if (
+        candidate.years_experience < min ||
+        candidate.years_experience > max
+      ) {
+        return false;
       }
     }
 
-    return true
-  })
+    return true;
+  });
 
   return (
     <div className="flex h-screen bg-gray-50">
@@ -136,17 +176,19 @@ export default function CandidatesPage() {
           <div className="max-w-7xl mx-auto space-y-6">
             <div className="flex items-center justify-between">
               <div>
-                <h1 className="text-2xl font-bold text-gray-900">Candidate Database</h1>
-                <p className="text-gray-600">Search and discover qualified maritime professionals</p>
+                <h1 className="text-2xl font-bold text-gray-900">
+                  Candidate Database
+                </h1>
+                <p className="text-gray-600">
+                  Search and discover qualified maritime professionals
+                </p>
               </div>
               <div className="flex gap-2">
                 <Button variant="outline">
                   <Download className="h-4 w-4 mr-2" />
                   Export Results
                 </Button>
-                <Button>
-                  Import Candidates
-                </Button>
+                <Button>Import Candidates</Button>
               </div>
             </div>
 
@@ -160,7 +202,8 @@ export default function CandidatesPage() {
               <div className="lg:col-span-3">
                 <div className="mb-4 flex items-center justify-between">
                   <p className="text-sm text-gray-600">
-                    Showing {filteredCandidates.length} of {mockCandidates.length} candidates
+                    Showing {filteredCandidates.length} of{" "}
+                    {mockCandidates.length} candidates
                   </p>
                   {shortlistedCandidates.length > 0 && (
                     <Button variant="outline" size="sm">
@@ -177,7 +220,9 @@ export default function CandidatesPage() {
                         candidate={candidate}
                         onViewProfile={handleViewProfile}
                         onShortlist={handleShortlist}
-                        isShortlisted={shortlistedCandidates.includes(candidate.id)}
+                        isShortlisted={shortlistedCandidates.includes(
+                          candidate.id
+                        )}
                       />
                     ))}
                   </div>
@@ -185,11 +230,17 @@ export default function CandidatesPage() {
                   <Card>
                     <CardContent className="p-8 text-center">
                       <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                      <h3 className="text-lg font-medium text-gray-900 mb-2">No candidates found</h3>
+                      <h3 className="text-lg font-medium text-gray-900 mb-2">
+                        No candidates found
+                      </h3>
                       <p className="text-gray-500 mb-4">
-                        Try adjusting your search criteria or filters to find more candidates.
+                        Try adjusting your search criteria or filters to find
+                        more candidates.
                       </p>
-                      <Button variant="outline" onClick={() => setFilters({})}>
+                      <Button
+                        variant="outline"
+                        onClick={() => setFilters(defaultFilters)}
+                      >
                         Clear All Filters
                       </Button>
                     </CardContent>
@@ -201,5 +252,5 @@ export default function CandidatesPage() {
         </main>
       </div>
     </div>
-  )
+  );
 }
