@@ -101,9 +101,9 @@ export default function Home() {
           </p>
           <div className="flex justify-center space-x-4">
             <LearnMoreButton />
-            <Button variant="outline" size="lg" className="px-8">
+            {/* <Button variant="outline" size="lg" className="px-8">
               Watch Demo
-            </Button>
+            </Button> */}
           </div>
         </div>
       </section>
