@@ -16,6 +16,13 @@ import {
 import { LearnMoreButton } from "@/components/landing/learn-more-button";
 import { useState } from "react";
 
+// Add this before your component to extend the Window interface
+declare global {
+  interface Window {
+    trackFormSubmit?: () => void;
+  }
+}
+
 export default function Home() {
   // State for contact form fields
   const [fullName, setFullName] = useState("");
@@ -46,6 +53,13 @@ export default function Home() {
         setEmail("");
         setRole("");
         setInterest("");
+        // Google Analytics form submission event
+        if (
+          typeof window !== "undefined" &&
+          typeof window.trackFormSubmit === "function"
+        ) {
+          window.trackFormSubmit();
+        }
       } else {
         const data = await res.json();
         setError(data.error || "Failed to send.");
@@ -343,7 +357,7 @@ export default function Home() {
                         htmlFor="get-started"
                         className="ml-3 text-sm text-gray-700"
                       >
-                        Get Started Today
+                        Start a Free Trial
                       </Label>
                     </div>
                     <div className="flex items-center">
@@ -361,7 +375,7 @@ export default function Home() {
                         htmlFor="learn-more"
                         className="ml-3 text-sm text-gray-700"
                       >
-                        Learn More
+                        Schedule a Demo
                       </Label>
                     </div>
                   </div>
